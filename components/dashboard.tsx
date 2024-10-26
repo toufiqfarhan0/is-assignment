@@ -29,12 +29,14 @@ const quickLinks = [
     description:
       "Access your LMS portal for assignments, class recordings, and notes.",
     color: "bg-[#4749B3]",
+    hoverTextColor: "group-hover:text-[#4749B3]",
   },
   {
     icon: BookUser,
     title: "Join Live Class",
     description: "Class 7 Math is starting in 1 hour, 35 minutes.",
     color: "bg-[#E66DFF]",
+    hoverTextColor: "group-hover:text-[#E66DFF]",
   },
   {
     icon: MessageCircle,
@@ -42,6 +44,7 @@ const quickLinks = [
     description:
       "Click here to contact your teacher for any doubts or concerns.",
     color: "bg-[#6669FE]",
+    hoverTextColor: "group-hover:text-[#6669FE]",
   },
 ]
 
@@ -111,25 +114,34 @@ const classSchedule = [
   },
 ]
 
+interface Recording {
+  id: number
+  subject: string
+  title: string
+  date: string
+  description: string
+  imageUrl: string
+}
+
 export default function Component() {
-  const [selectedRecording, setSelectedRecording] = useState(null)
+  const [selectedRecording, setSelectedRecording] = useState<Recording | null>(null)
 
   return (
-    <div className="container mx-auto p-4 grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="container mx-auto p-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
       {/* Announcements and Schedule Column */}
       <div className="space-y-6">
         {/* Announcements Card */}
         <div>
           <h2 className="text-2xl font-bold mb-2">Announcements</h2>
-          <Card className="w-full h-[200px] overflow-auto">
+          <Card className="w-full h-[150px] overflow-auto transition-shadow duration-300 hover:shadow-lg cursor-default">
             <CardContent className="space-y-4 pt-6">
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2 bg-[#F8F8F8]">
                 <Sun className="text-yellow-500 h-5 w-5" />
                 <p className="text-sm">
                   On account of Independence Day, August 15th will be a holiday.
                 </p>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2 bg-[#F8F8F8]">
                 <ListCheck className="text-green-500 h-5 w-5" />
                 <p className="text-sm">
                   Reminder to finish your assignments and submit them by Monday.
@@ -142,14 +154,14 @@ export default function Component() {
         {/* Schedule Card */}
         <div>
           <h2 className="text-2xl font-bold mb-2">Your Class Schedule</h2>
-          <Card className="w-full">
+          <Card className="w-full transition-shadow duration-300 hover:shadow-lg cursor-pointer">
             <CardContent className="space-y-4 pt-6">
               {classSchedule.map((schedule, index) => (
                 <Card
                   key={schedule.id}
                   className={`relative ${
                     index === 2 ? "bg-[#E66DFF]" : "bg-[#F2F2FF]"
-                  } w-full h-[60px] rounded-t-md mb-2`}
+                  } w-full h-[60px] rounded-t-md mb-2 transition-transform duration-300 hover:scale-105`}
                 >
                   <CardContent className="flex items-center p-2 h-full">
                     <Video
@@ -195,31 +207,31 @@ export default function Component() {
       {/* Quick Links Card */}
       <div>
         <h2 className="text-2xl font-bold mb-2">Quick Links</h2>
-        <Card className="w-full h-[600px] overflow-auto cursor-default bg-n">
+        <Card className="w-full h-[600px] overflow-auto cursor-default bg-transparent border-none">
           <CardContent className="pt-6">
             <div className="grid gap-4">
               {quickLinks.map((link, index) => (
                 <Card
                   key={index}
-                  className={`${link.color} text-white transition-colors duration-300 hover:bg-white hover:text-current rounded-2xl group`}
+                  className={`${link.color} text-white transition-all duration-300 hover:bg-white rounded-2xl group hover:shadow-xl hover:scale-105`}
                   style={{
-                    width: '346px',
+                    width: '100%',
                     height: '170px',
                     gap: '0px'
                   }}
                 >
                   <CardHeader className="p-4">
                     <div className="flex items-center justify-center space-x-2">
-                      <link.icon className="h-6 w-6" />
+                      <link.icon className={`h-6 w-6 ${link.hoverTextColor}`} />
                     </div>
                     <div className="flex items-center justify-center space-x-2">
-                      <CardTitle className="group-hover:text-black text-xl font-bold">
+                      <CardTitle className={`text-xl font-bold ${link.hoverTextColor}`}>
                         {link.title}
                       </CardTitle>
                     </div>
                   </CardHeader>
                   <CardContent className="p-4 pt-0 items-center flex justify-center">
-                    <CardDescription className="text-white/80 group-hover:text-black/80 text-xs items-center flex justify-center">
+                    <CardDescription className={`text-white/80 text-xs items-center flex justify-center ${link.hoverTextColor}`}>
                       {link.description}
                     </CardDescription>
                   </CardContent>
@@ -233,7 +245,7 @@ export default function Component() {
       {/* Class Recordings Card */}
       <div>
         <h2 className="text-2xl font-bold mb-2">Access Class Recordings</h2>
-        <Card className="w-full h-[600px] overflow-auto">
+        <Card className="w-full h-[580px] overflow-auto transition-shadow duration-300 hover:shadow-lg">
           <CardContent className="space-y-4 pt-6">
             <div className="flex flex-col gap-4">
               <div className="relative w-full">
@@ -255,19 +267,19 @@ export default function Component() {
               {classRecordings.map((recording, index) => (
                 <Card
                   key={recording.id}
-                  className="overflow-hidden group cursor-pointer"
+                  className="overflow-hidden group cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-105"
                   onClick={() => setSelectedRecording(recording)}
                 >
                   <div className="flex items-center p-3">
                     <div className="flex-grow">
-                      <CardDescription  className={`text-xs group-hover:${
-                          index === 2 ? "text-[#E66DFF]" : "text-[#4749B3]"
+                      <CardDescription className={`text-xs ${
+                          index === 2 ? "group-hover:text-[#E66DFF]" : "group-hover:text-[#4749B3]"
                         }`}>
                         {recording.subject}
                       </CardDescription>
                       <CardTitle
-                        className={`text-sm font-bold group-hover:${
-                          index === 2 ? "text-[#E66DFF]" : "text-[#4749B3]"
+                        className={`text-sm font-bold ${
+                          index === 2 ? "group-hover:text-[#E66DFF]" : "group-hover:text-[#4749B3]"
                         }`}
                       >
                         {recording.title}
@@ -275,13 +287,12 @@ export default function Component() {
                       <div className="mt-4">
                       <p className="text-xs text-gray-500">{recording.date}</p>
                       </div>
-
                     </div>
                     <div className="flex-shrink-0 ml-2">
-                      <img
+                    <img
                         src="/classRB.png"
                         alt="video thumbnail"
-                          className="w-20 h-12 object-cover rounded transition duration-300 hover:filter hover:grayscale hover:brightness-75"
+                        className="w-20 h-12 object-cover rounded"
                       />
                     </div>
                   </div>
@@ -294,11 +305,11 @@ export default function Component() {
 
       {/* Popup for selected recording */}
       {selectedRecording && (
-        <div className="fixed inset-0 bg-black min-h-screen bg-opacity-50 flex items-center justify-center z-50">
-          <Card className="w-full max-w-2xl bg-[#4749B3]">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <Card className="w-full max-w-5xl bg-[#4749B3] max-h-[90vh] overflow-auto">
             <CardHeader className="relative">
-              <CardTitle className="text-white">{selectedRecording.title}</CardTitle>
-              <CardDescription className="text-white">{selectedRecording.description}</CardDescription>
+              <CardTitle className="text-white flex justify-center">{selectedRecording.subject}</CardTitle>
+              <CardDescription className="text-white flex justify-center">{selectedRecording.title}</CardDescription>
               <Button
                 className="absolute top-2 right-2"
                 variant="ghost"
